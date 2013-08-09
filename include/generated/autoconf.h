@@ -1,7 +1,7 @@
 /*
  * Automatically generated C config: don't edit
- * Linux kernel version: 2.6.37.6
- * Fri Aug  9 13:40:00 2013
+ * Linux kernel version: 2.6.35.7
+ * Fri Aug  9 16:13:33 2013
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_RING_BUFFER 1
@@ -523,7 +523,7 @@
 #define CONFIG_FSA9280 1
 #define CONFIG_DEBUG_KERNEL 1
 #define CONFIG_COMPAT_BRK 1
-#define CONFIG_LOCALVERSION "-jellybean"
+#define CONFIG_LOCALVERSION "-1203276"
 #define CONFIG_CRYPTO 1
 #define CONFIG_DEFAULT_MMAP_MIN_ADDR 4096
 #define CONFIG_IP_NF_IPTABLES 1

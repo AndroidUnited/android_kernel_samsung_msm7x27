@@ -1,7 +1,7 @@
 VERSION = 2
 PATCHLEVEL = 6
-SUBLEVEL = 37
-EXTRAVERSION = .6
+SUBLEVEL = 35
+EXTRAVERSION = .7
 NAME = Yokohama
 
 # *DOCUMENTATION*
@@ -188,7 +188,7 @@ SUBARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ \
 # Default value for CROSS_COMPILE is not to prefix executables
 # Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
 export KBUILD_BUILDHOST := $(SUBARCH)
-export KBUILD_BUILD_VERSION:=SpaceBuild
+export KBUILD_BUILD_VERSION:=SpaceBuild-BadAssKernel
 CROSS_COMPILE	?=/home/robin/CodeSourcery/Toolchain/bin/arm-none-eabi-
 CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
 ARCH            = arm

@@ -1,8 +1,8 @@
-/* This file is auto generated, version SpaceBuild */
+/* This file is auto generated, version SpaceBuild-BadAssKernel */
 /*  PREEMPT */
 #define UTS_MACHINE "arm"
-#define UTS_VERSION "#SpaceBuild PREEMPT Fri Aug 9 13:40:04 CEST 2013"
-#define LINUX_COMPILE_TIME "13:40:04"
+#define UTS_VERSION "#SpaceBuild-BadAssKernel PREEMPT Fri Aug 9 16:12:53 CEST 2013"
+#define LINUX_COMPILE_TIME "16:12:53"
 #define LINUX_COMPILE_BY "robin"
 #define LINUX_COMPILE_HOST "pavilion-G7"
 #define LINUX_COMPILE_DOMAIN "(none)"
