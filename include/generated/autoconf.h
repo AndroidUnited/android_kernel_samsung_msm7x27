@@ -1,7 +1,7 @@
 /*
  * Automatically generated C config: don't edit
  * Linux kernel version: 2.6.35.7
- * Fri Aug  9 16:13:33 2013
+ * Fri Aug  9 21:23:15 2013
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_RING_BUFFER 1
@@ -107,6 +107,7 @@
 #define CONFIG_NF_CONNTRACK_SANE 1
 #define CONFIG_NF_CT_PROTO_DCCP 1
 #define CONFIG_ZLIB_INFLATE 1
+#define CONFIG_USB_G_ANDROID 1
 #define CONFIG_CRYPTO_TWOFISH_COMMON 1
 #define CONFIG_IP_PNP 1
 #define CONFIG_MSM_VIC 1
