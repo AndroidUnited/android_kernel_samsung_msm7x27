@@ -36,6 +36,8 @@
 extern int board_hw_revision;
 #if defined(CONFIG_MACH_CALLISTO)
 static unsigned char n_GPIO_KEY_LED_EN = 78;
+#else
+static unsigned char n_GPIO_KEY_LED_EN = 97;
 #endif
 #if defined(CONFIG_MACH_COOPER) || defined(CONFIG_MACH_GIO) || defined(CONFIG_MACH_TASSDT)
 static struct vreg *vreg_keyled;
@@ -248,7 +250,10 @@ static struct miscdevice backlightnotification_device = {
 
 static int msm_pmic_led_probe(struct platform_device *pdev)
 {
-	int rc = 0;
+	int rc, ret = 0;
+#if !defined(CONFIG_MACH_COOPER) && !defined(CONFIG_MACH_GIO) && !defined(CONFIG_MACH_TASSDT)
+	struct vreg *vreg_keyled;
+#endif
 
 #if defined(CONFIG_MACH_COOPER)
 	if ( board_hw_revision >= 0x3 )
