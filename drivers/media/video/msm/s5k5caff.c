@@ -1290,7 +1290,7 @@ static long s5k5caff_set_sensor_mode(int mode)
 	int base_high, base_low, cur_lux;
 	char vsync_value, cnt;
 
-	unsigned int	before_time, after_time, time_gab;//I2C SPEED TEST
+	unsigned int	before_time, after_time, i, time_gab;//I2C SPEED TEST
 
 	int *i2c_clk_addr; //TEMP Dirty Code, Do not use it!
 
@@ -1304,7 +1304,7 @@ static long s5k5caff_set_sensor_mode(int mode)
 		printk("<=PCAM=> camera init for TASS ver0.1");
 
 		//i2c_clk_addr = 0xd500c004;
-		printk("<=PCAM=>i2c_clk_addr:%p,  i2c clk :%x\n", i2c_clk_addr,readl(i2c_clk_addr));
+		printk("<=PCAM=>i2c_clk_addr:%x,  i2c clk :%x\n", i2c_clk_addr,readl(i2c_clk_addr));
 
 		before_time = get_jiffies_64();
 
