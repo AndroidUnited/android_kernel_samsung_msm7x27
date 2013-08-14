@@ -643,9 +643,9 @@ static void ramzswap_free_page(struct ramzswap *rzs, size_t index)
 		goto out;
 	}
 
-	obj = kmap_atomic(page) + offset;
+	obj = kmap_atomic(page, KM_USER0) + offset;
 	clen = xv_get_object_size(obj) - sizeof(struct zobj_header);
-	kunmap_atomic(obj);
+	kunmap_atomic(obj, KM_USER0);
 
 	xv_free(rzs->mem_pool, page, offset);
 	if (clen <= PAGE_SIZE / 2)
@@ -664,9 +664,9 @@ static int handle_zero_page(struct bio *bio)
 	void *user_mem;
 	struct page *page = bio->bi_io_vec[0].bv_page;
 
-	user_mem = kmap_atomic(page);
+	user_mem = kmap_atomic(page, KM_USER0);
 	memset(user_mem, 0, PAGE_SIZE);
-	kunmap_atomic(user_mem);
+	kunmap_atomic(user_mem, KM_USER0);
 
 	ramzswap_flush_dcache_page(page);
 
@@ -684,13 +684,13 @@ static int handle_uncompressed_page(struct ramzswap *rzs, struct bio *bio)
 	page = bio->bi_io_vec[0].bv_page;
 	index = bio->bi_sector >> SECTORS_PER_PAGE_SHIFT;
 
-	user_mem = kmap_atomic(page);
-	cmem = kmap_atomic(rzs->table[index].page) +
+	user_mem = kmap_atomic(page, KM_USER0);
+	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
 			rzs->table[index].offset;
 
 	memcpy(user_mem, cmem, PAGE_SIZE);
-	kunmap_atomic(user_mem);
-	kunmap_atomic(cmem);
+	kunmap_atomic(user_mem, KM_USER0);
+	kunmap_atomic(cmem, KM_USER1);
 
 	ramzswap_flush_dcache_page(page);
 
@@ -770,10 +770,10 @@ static int ramzswap_read(struct ramzswap *rzs, struct bio *bio)
 	if (unlikely(rzs_test_flag(rzs, index, RZS_UNCOMPRESSED)))
 		return handle_uncompressed_page(rzs, bio);
 
-	user_mem = kmap_atomic(page);
+	user_mem = kmap_atomic(page, KM_USER0);
 	clen = PAGE_SIZE;
 
-	cmem = kmap_atomic(rzs->table[index].page) +
+	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
 			rzs->table[index].offset;
 
 	ret = lzo1x_decompress_safe(
@@ -781,8 +781,8 @@ static int ramzswap_read(struct ramzswap *rzs, struct bio *bio)
 		xv_get_object_size(cmem) - sizeof(*zheader),
 		user_mem, &clen);
 
-	kunmap_atomic(user_mem);
-	kunmap_atomic(cmem);
+	kunmap_atomic(user_mem, KM_USER0);
+	kunmap_atomic(cmem, KM_USER1);
 
 	/* should NEVER happen */
 	if (unlikely(ret != LZO_E_OK)) {
@@ -831,9 +831,9 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 
 	mutex_lock(&rzs->lock);
 
-	user_mem = kmap_atomic(page);
+	user_mem = kmap_atomic(page, KM_USER0);
 	if (page_zero_filled(user_mem)) {
-		kunmap_atomic(user_mem);
+		kunmap_atomic(user_mem, KM_USER0);
 		rzs_set_flag(rzs, index, RZS_ZERO);
 		mutex_unlock(&rzs->lock);
 		stat_inc(&rzs->stats.pages_zero);
@@ -845,7 +845,7 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 
 	if (rzs->backing_swap &&
 		(rzs->stats.compr_size > rzs->memlimit - PAGE_SIZE)) {
-		kunmap_atomic(user_mem);
+		kunmap_atomic(user_mem, KM_USER0);
 		mutex_unlock(&rzs->lock);
 		fwd_write_request = 1;
 		goto out;
@@ -854,7 +854,7 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 	ret = lzo1x_1_compress(user_mem, PAGE_SIZE, src, &clen,
 				rzs->compress_workmem);
 
-	kunmap_atomic(user_mem);
+	kunmap_atomic(user_mem, KM_USER0);
 
 	if (unlikely(ret != LZO_E_OK)) {
 		mutex_unlock(&rzs->lock);
@@ -890,7 +890,7 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 		rzs_set_flag(rzs, index, RZS_UNCOMPRESSED);
 		stat_inc(&rzs->stats.pages_expand);
 		rzs->table[index].page = page_store;
-		src = kmap_atomic(page);
+		src = kmap_atomic(page, KM_USER0);
 		goto memstore;
 	}
 
@@ -909,7 +909,7 @@ static int ramzswap_write(struct ramzswap *rzs, struct bio *bio)
 memstore:
 	rzs->table[index].offset = offset;
 
-	cmem = kmap_atomic(rzs->table[index].page) +
+	cmem = kmap_atomic(rzs->table[index].page, KM_USER1) +
 			rzs->table[index].offset;
 
 #if 0
@@ -923,9 +923,9 @@ memstore:
 
 	memcpy(cmem, src, clen);
 
-	kunmap_atomic(cmem);
+	kunmap_atomic(cmem, KM_USER1);
 	if (unlikely(rzs_test_flag(rzs, index, RZS_UNCOMPRESSED)))
-		kunmap_atomic(src);
+		kunmap_atomic(src, KM_USER0);
 
 	/* Update stats */
 	rzs->stats.compr_size += clen;

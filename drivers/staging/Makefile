@@ -58,8 +58,3 @@ obj-$(CONFIG_MSM_STAGING)	+= msm/
 obj-$(CONFIG_GOBI_USBNET)	+= gobi/QCUSBNet2k/
 obj-$(CONFIG_ATH6K_LEGACY)      += ath6kl/
 obj-$(CONFIG_ZCACHE)            += zcache/
-obj-$(CONFIG_ZSMALLOC)            += zsmalloc/
-obj-$(CONFIG_SNAPPY_COMPRESS)            += snappy/
-obj-$(CONFIG_LZ4_COMPRESS)            += lz4/
-obj-$(CONFIG_LZ4_DECOMPRESS)            += lz4/
-
