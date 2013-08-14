@@ -91,15 +91,6 @@ task_notify_func(struct notifier_block *self, unsigned long val, void *data)
 	return NOTIFY_OK;
 }
 
-config ANDROID_LOW_MEMORY_KILLER_AUTODETECT_OOM_ADJ_VALUES
-  bool "Android Low Memory Killer: detect oom_adj values"
-  depends on ANDROID_LOW_MEMORY_KILLER
-  default y
-  ---help---
-    Detect oom_adj values written to
-    /sys/module/lowmemorykiller/parameters/adj and convert them
-    to oom_score_adj values.
-
 static int lowmem_shrink(struct shrinker *s, int nr_to_scan, gfp_t gfp_mask)
 {
 	struct task_struct *p;
