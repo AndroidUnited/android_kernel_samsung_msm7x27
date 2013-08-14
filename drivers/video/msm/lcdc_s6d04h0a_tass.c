@@ -688,6 +688,7 @@ static int lcdc_s6d04h0a_panel_off(struct platform_device *pdev)
 static void lcdc_s6d04h0a_set_backlight(struct msm_fb_data_type *mfd)
 {	
 	int bl_value = mfd->bl_level;
+	static int lockup_count = 0;
 	printk("[BACLKIGHT] : %d\n",bl_value);
 	if(board_hw_revision == 1 || board_hw_revision == 0) {
 		lcdc_s6d_set_brightness_by_aat1401(bl_value);
@@ -930,7 +931,7 @@ static void s6d04h0a_shutdown(struct platform_device *pdev)
 	}
 
 	if(lcd_det_data.irq > 0) {
-		free_irq(lcd_det_data.irq,(void *)pdev->id);
+		free_irq(lcd_det_data.irq,pdev->id);
 		lcd_det_data.irq = -1;
 	}
 	lcdc_s6d04h0a_panel_off(pdev);
@@ -1007,7 +1008,7 @@ static int __init lcdc_s6d04h0a_panel_init(void)
 	pinfo->pdest = DISPLAY_1;
 	pinfo->wait_cycle = 0;
 	pinfo->bpp = 18;
-	pinfo->fb_num = 3;
+	pinfo->fb_num = 2;
 	pinfo->clk_rate = (8760 * 1000);//(8384 * 1000);
 	pinfo->bl_max = 255;
 	pinfo->bl_min = 1;

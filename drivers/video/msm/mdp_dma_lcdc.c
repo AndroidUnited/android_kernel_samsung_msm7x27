@@ -67,6 +67,7 @@ int mdp_lcdc_on(struct platform_device *pdev)
 {
 	int lcdc_width;
 	int lcdc_height;
+	int lcdc_bpp;
 	int lcdc_border_clr;
 	int lcdc_underflow_clr;
 	int lcdc_hsync_skew;
@@ -212,6 +213,7 @@ int mdp_lcdc_on(struct platform_device *pdev)
 
 	lcdc_width = mfd->panel_info.xres;
 	lcdc_height = mfd->panel_info.yres;
+	lcdc_bpp = mfd->panel_info.bpp;
 
 	hsync_period =
 	    hsync_pulse_width + h_back_porch + lcdc_width + h_front_porch;
@@ -343,9 +345,7 @@ int mdp_lcdc_on(struct platform_device *pdev)
 int mdp_lcdc_off(struct platform_device *pdev)
 {
 	int ret = 0;
-#ifdef CONFIG_FB_MSM_MDP40
 	struct msm_fb_data_type *mfd;
-#endif
 	uint32 timer_base = LCDC_BASE;
 	uint32 block = MDP_DMA2_BLOCK;
 
@@ -354,9 +354,9 @@ int mdp_lcdc_off(struct platform_device *pdev)
 
 	printk("[HSIL] %s(%d)  mdp_lcdc_off start\n", __func__, __LINE__);
 
+	mfd = (struct msm_fb_data_type *)platform_get_drvdata(pdev);
 
 #ifdef CONFIG_FB_MSM_MDP40
-	mfd = (struct msm_fb_data_type *)platform_get_drvdata(pdev);
 	if (mfd->panel.type == HDMI_PANEL) {
 		block = MDP_DMA_E_BLOCK;
 		timer_base = DTV_BASE;

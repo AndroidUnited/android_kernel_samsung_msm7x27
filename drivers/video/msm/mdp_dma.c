@@ -506,6 +506,9 @@ void mdp_set_dma_pan_info(struct fb_info *info, struct mdp_dirty_region *dirty,
 void mdp_dma_pan_update(struct fb_info *info)
 {
 	struct msm_fb_data_type *mfd = (struct msm_fb_data_type *)info->par;
+	MDPIBUF *iBuf;
+
+	iBuf = &mfd->ibuf;
 
 	if (mfd->sw_currently_refreshing) {
 		/* we need to wait for the pending update */

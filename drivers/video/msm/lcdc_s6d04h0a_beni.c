@@ -607,7 +607,7 @@ static int __init lcdc_s6d04h0a_panel_init(void)
 	pinfo->wait_cycle = 0;
 //	pinfo->bpp = 24;
 	pinfo->bpp = 18;
-	pinfo->fb_num = 3;
+	pinfo->fb_num = 2;
 //	pinfo->clk_rate = (9388 * 1000); //(8384 * 1000); vsync clk change ( 87Hz -> 97.7Hz )
 //	pinfo->clk_rate = (8500 * 1000); //vsync clk change ( 94Hz )
 	pinfo->clk_rate = (8192 * 1000);
